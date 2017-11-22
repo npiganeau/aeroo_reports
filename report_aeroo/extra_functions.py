@@ -212,7 +212,8 @@ class ExtraFunctions(object):
             ('type', '=', 'report'),
             ('src', '=', source),
             ('lang', '=', self.context['lang'] or self.context['user_lang'])
-        ])
+        ], limit=1, order='id desc')
+        trans_value = trans and trans[0] and trans[0]['value'] or False
         if not trans:
             self.env['ir.translation'].create({
                 'src': source,
@@ -221,9 +222,7 @@ class ExtraFunctions(object):
                 'res_id': self.report_id,
                 'name': 'ir.actions.report.xml',
             })
-        return translate(
-            'ir.actions.report.xml', 'report', self._get_lang(), source
-        ) or source
+        return trans_value or source
 
     def _countif(self, attr, domain):
         statement = domain2statement(domain)
