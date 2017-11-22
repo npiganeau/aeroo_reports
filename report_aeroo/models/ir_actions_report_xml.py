@@ -67,6 +67,17 @@ class ReportXml(models.Model):
         "of the record being printed in the report.",
         default="o.company_id")
 
+    def _report_content(self, name):
+        data = self[name + '_content_data']
+        if not data and self[name]:
+            try:
+                with tools.file_open(self[name], mode='rb') as fp:
+                    data = self.report_type == 'aeroo' and \
+                        base64.encodestring(fp.read()) or fp.read()
+            except Exception:
+                data = False
+        return data
+
     @api.multi
     def get_template(self, record, lang, company):
         self.ensure_one()
@@ -187,7 +198,6 @@ class ReportXml(models.Model):
                 raise ValidationError(
                     _('No template found for report %s' % self.report_name))
 
-            if self.tml_source == 'database':
-                template = base64.decodestring(template)
+            template = base64.decodestring(template)
 
         return template
