@@ -104,6 +104,11 @@ msgid "Company Evaluation"
 msgstr "Évaluation de la société"
 
 #. module: report_aeroo
+#: model:ir.model.fields,field_description:report_aeroo.field_ir_act_report_xml_process_separately
+msgid "Process Separately"
+msgstr "Traiter séparément"
+
+#. module: report_aeroo
 #: model:ir.model.fields,field_description:report_aeroo.field_report_mimetypes_compatible_types
 msgid "Compatible Mime-Types"
 msgstr "Types compatibles"
@@ -231,6 +236,20 @@ msgstr "Groupes"
 #: model:ir.model.fields,field_description:report_aeroo.field_report_mimetypes_id
 msgid "ID"
 msgstr "ID"
+
+#. module: report_aeroo
+#: model:ir.model.fields,help:report_aeroo.field_ir_act_report_xml_process_separately
+msgid ""
+"If checked the report template will be processed separately "
+"with each record's data and the whole will be merged afterwards "
+"if the output format is PDF. Otherwise, the template will be "
+"processed with all records data at once."
+msgstr ""
+"Si cette case est cochée, le modèle de rapport sera traité "
+"séparément avec les données de chacun des enregistrement et "
+"le tout sera fusionné ensuite si le format de sortie est PDF."
+"Dans le cas contraire, le modèle de rapport sera traité avec "
+"les données de tous les enregistrements."
 
 #. module: report_aeroo
 #: model:ir.ui.view,arch_db:report_aeroo.act_aeroo_report_xml_search_view
