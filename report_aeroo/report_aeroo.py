@@ -19,7 +19,7 @@ from odoo.api import Environment
 from odoo.report.report_sxw import report_sxw
 from odoo.tools.translate import _
 from odoo.tools.safe_eval import safe_eval
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 from tempfile import NamedTemporaryFile
 
@@ -78,7 +78,7 @@ class AerooReport(report_sxw):
                 'report_aeroo.libreoffice_timeout')
         )
         if not libreoffice_timeout:
-            raise ValidationError(
+            raise UserError(
                 _('Aeroo reports are wrongly configured. '
                   'The global parameter report_aeroo.libreoffice_timeout '
                   'must be defined.'))
@@ -92,7 +92,7 @@ class AerooReport(report_sxw):
 
             elif status is not None:
                 os.remove(temp_file.name)
-                raise ValidationError(
+                raise UserError(
                     _('Could not generate the report %(report)s '
                       'using the format %(output_format)s.') % {
                         'report': report_xml.name,
@@ -105,7 +105,7 @@ class AerooReport(report_sxw):
             if timetaken > libreoffice_timeout:
                 proc.kill()
                 os.remove(temp_file.name)
-                raise ValidationError(
+                raise UserError(
                     _('Could not generate the report %(report)s '
                       'using the format %(output_format)s. '
                       'Timeout Exceeded.') % {
@@ -137,6 +137,8 @@ class AerooReport(report_sxw):
         oo_parser.localcontext['data'] = data
         oo_parser.localcontext['user_lang'] = context.get('lang', False)
         oo_parser.localcontext['o'] = objects[0]
+        if not report_xml.process_separately:
+            oo_parser.localcontext['objects'] = objects
 
         xfunc = ExtraFunctions(cr, uid, report_xml.id, oo_parser.localcontext)
         oo_parser.localcontext.update(xfunc.functions)
@@ -162,7 +164,7 @@ class AerooReport(report_sxw):
             )
 
             if not libreoffice_location:
-                raise ValidationError(
+                raise UserError(
                     _('Aeroo reports are wrongly configured. '
                       'The global parameter report_aeroo.libreoffice_location '
                       'must be defined.'))
@@ -190,7 +192,7 @@ class AerooReport(report_sxw):
         output_format = report_xml.out_format.code[3:]
 
         if output_format != 'pdf':
-            raise ValidationError(
+            raise UserError(
                 _('Aeroo Reports do not support generating non-pdf '
                   'reports in batch. You must select one record '
                   'at a time.'))
@@ -215,7 +217,7 @@ class AerooReport(report_sxw):
         )
 
         if not pdftk_location:
-            raise ValidationError(
+            raise UserError(
                 _('Aeroo reports are wrongly configured. '
                   'The global parameter report_aeroo.pdftk_location '
                   'must be defined.'))
@@ -243,7 +245,7 @@ class AerooReport(report_sxw):
         report_xml = env['ir.actions.report.xml'].search(
             [('report_name', '=', name)])
 
-        if len(ids) > 1:
+        if report_xml.process_separately and len(ids) > 1:
             return self.create_aeroo_merged_report(
                 cr, uid, ids, data, report_xml, context=context)
 

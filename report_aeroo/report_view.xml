@@ -57,6 +57,7 @@
                             </group>
                             <group string="Miscellaneous">
                                 <field name="multi"/>
+                                <field name="process_separately"/>
                             </group>
                         </page>
                         <page string="Security">

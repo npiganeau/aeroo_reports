@@ -66,6 +66,13 @@ class ReportXml(models.Model):
         help="Python expression used to determine the company "
         "of the record being printed in the report.",
         default="o.company_id")
+    process_separately = fields.Boolean(
+        'Process Separately', default=True,
+        help="If checked the report template will be processed separately "
+             "with each record's data and the whole will be merged afterwards "
+             "if the output format is PDF. Otherwise, the template will be "
+             "processed with all records data at once."
+    )
 
     @api.multi
     def get_template(self, record, lang, company):

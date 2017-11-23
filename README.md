@@ -15,6 +15,8 @@ Aeroo Reports for Odoo v10.0
  - Install libreoffice
     - apt-get install libreoffice, libreoffice-writer, openjdk-7-jre
 
+ - Install PDFtk
+    - apt-get install pdftk
 
 ## Translations
 
