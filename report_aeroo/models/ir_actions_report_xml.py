@@ -10,7 +10,7 @@ import os
 import sys
 
 from odoo import models, fields, api, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.report import interface
 from odoo.report.report_sxw import rml_parse
 from openerp.tools.safe_eval import safe_eval
@@ -88,7 +88,7 @@ class ReportXml(models.Model):
         ), None)
 
         if line is None:
-            raise ValidationError(
+            raise UserError(
                 _('Could not render report %s for the company %s in '
                   'lang %s.') % (
                     self.name, company.name, lang))
@@ -133,7 +133,7 @@ class ReportXml(models.Model):
                     class_inst = py_mod.Parser
                 return class_inst
 
-        raise ValidationError(_('Parser not found at: %s') % path)
+        raise UserError(_('Parser not found at: %s') % path)
 
     def _lookup_report(self, name):
         if 'report.' + name in interface.report_int._reports:
@@ -191,7 +191,7 @@ class ReportXml(models.Model):
         else:
             template = self.report_sxw_content
             if not template:
-                raise ValidationError(
+                raise UserError(
                     _('No template found for report %s' % self.report_name))
 
             if self.tml_source == 'database':

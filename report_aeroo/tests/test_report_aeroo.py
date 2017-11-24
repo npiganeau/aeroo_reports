@@ -4,7 +4,7 @@
 
 import os
 import stat
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.modules import module
 from odoo.tests import common
 
@@ -107,7 +107,7 @@ class TestAerooReport(common.SavepointCase):
         self.report.out_format = self.env.ref(
             'report_aeroo.report_mimetypes_pdf_odt')
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.partner.print_report('sample_report', {})
 
     def _set_libreoffice_location(self, filename):
@@ -125,7 +125,7 @@ class TestAerooReport(common.SavepointCase):
         self.report.out_format = self.env.ref(
             'report_aeroo.report_mimetypes_pdf_odt')
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.partner.print_report('sample_report', {})
 
     def test_06_libreoffice_finish_after_100s(self):
@@ -136,7 +136,7 @@ class TestAerooReport(common.SavepointCase):
         self.env['ir.config_parameter'].set_param(
             'report_aeroo.libreoffice_timeout', '5')
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.partner.print_report('sample_report', {})
 
     def test_07_libreoffice_fail(self):
@@ -147,7 +147,7 @@ class TestAerooReport(common.SavepointCase):
         self.env['ir.config_parameter'].set_param(
             'report_aeroo.libreoffice_timeout', '5')
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.partner.print_report('sample_report', {})
 
     def test_08_multicompany_context(self):
@@ -157,7 +157,7 @@ class TestAerooReport(common.SavepointCase):
     def test_09_multicompany_context(self):
         self._create_report_line(self.lang_en, self.company.id)
         self.partner.write({'company_id': self.company_2.id})
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.partner.print_report('sample_report', {})
 
     def test_10_multicompany_context(self):
@@ -166,7 +166,7 @@ class TestAerooReport(common.SavepointCase):
 
     def test_11_multicompany_context(self):
         self._create_report_line(self.lang_fr)
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.partner.print_report('sample_report', {})
 
     def test_12_sample_report_pdf_with_multiple_export(self):
@@ -185,5 +185,5 @@ class TestAerooReport(common.SavepointCase):
             'report_aeroo.report_mimetypes_pdf_odt')
         partners = self.partner | self.partner_2
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             partners.print_report('sample_report', {})
